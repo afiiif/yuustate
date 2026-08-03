@@ -8,16 +8,16 @@ export function meta() {
 // Use a____s to prevent "/assets" replacement to "/yuustate/assets" on CI
 const buildOutput = `✓ 103 modules transformed.
 build/client/.vite/manifest.json                  3.20 kB │ gzip:  0.60 kB
-build/client/a____s/root-CRn6MgiL.css            15.45 kB │ gzip:  3.77 kB
+build/client/a____s/root-BoO3ATQ1.css            15.37 kB │ gzip:  3.75 kB
 build/client/a____s/components-DrxDq1-G.js        1.01 kB │ gzip:  0.59 kB
-build/client/a____s/store-yuustate-ANnGAsrD.js    1.12 kB │ gzip:  0.51 kB
+build/client/a____s/store-yuustate-CWZKPY9K.js    1.12 kB │ gzip:  0.51 kB
 build/client/a____s/store-zustand-BJYVMYXp.js     1.68 kB │ gzip:  0.79 kB
-build/client/a____s/utils-DuanyUhp.js             1.94 kB │ gzip:  0.60 kB
-build/client/a____s/root-CDn2kOZF.js              2.46 kB │ gzip:  1.01 kB
-build/client/a____s/home-DQiCh3EF.js              2.74 kB │ gzip:  1.18 kB
-build/client/a____s/async-yuustate-DoDkgSCs.js    7.13 kB │ gzip:  1.99 kB
-build/client/a____s/react-yNhF9ZRY.js            11.80 kB │ gzip:  4.02 kB
-build/client/a____s/async-tanstack-Cq-pcNs-.js   43.94 kB │ gzip: 12.62 kB
+build/client/a____s/utils-CFBxdO4k.js             2.07 kB │ gzip:  0.64 kB
+build/client/a____s/root-B41NV51g.js              2.46 kB │ gzip:  1.01 kB
+build/client/a____s/home-DTiNyCnA.js              2.70 kB │ gzip:  1.18 kB
+build/client/a____s/async-yuustate-D5PCOWrn.js    7.22 kB │ gzip:  2.00 kB
+build/client/a____s/react-l3jiHRhi.js            11.93 kB │ gzip:  4.07 kB
+build/client/a____s/async-tanstack-DATZCeg8.js   44.06 kB │ gzip: 12.64 kB
 build/client/a____s/chunk-UVKPFVEO-BCVTWmlK.js  126.29 kB │ gzip: 42.59 kB
 build/client/a____s/entry.client-CMKBzKJ-.js    190.57 kB │ gzip: 60.05 kB
 ✓ built in 715ms`.split("\n");

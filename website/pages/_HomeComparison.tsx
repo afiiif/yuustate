@@ -5,16 +5,16 @@ import { cn } from "@/utils/string";
 const comparisonResult = `
 ✓ 103 modules transformed.
   /.vite/manifest.json                    3.20 kB │ gzip:  0.60 kB
-  /assets/root-CRn6MgiL.css              15.45 kB │ gzip:  3.77 kB
+  /assets/root-BoO3ATQ1.css              15.37 kB │ gzip:  3.75 kB
   /assets/components-DrxDq1-G.js          1.01 kB │ gzip:  0.59 kB
-  /assets/store-yuustate-ANnGAsrD.js      1.12 kB │ gzip:  0.51 kB 🎉
+  /assets/store-yuustate-CWZKPY9K.js      1.12 kB │ gzip:  0.51 kB 🎉
   /assets/store-zustand-BJYVMYXp.js       1.68 kB │ gzip:  0.79 kB
-  /assets/utils-DuanyUhp.js               1.94 kB │ gzip:  0.60 kB
-  /assets/root-CDn2kOZF.js                2.46 kB │ gzip:  1.01 kB
-  /assets/home-DQiCh3EF.js                2.74 kB │ gzip:  1.18 kB
-  /assets/async-yuustate-DoDkgSCs.js      7.13 kB │ gzip:  1.99 kB 🎉
-  /assets/react-yNhF9ZRY.js              11.80 kB │ gzip:  4.02 kB
-  /assets/async-tanstack-Cq-pcNs-.js     43.94 kB │ gzip: 12.62 kB
+  /assets/utils-CFBxdO4k.js               2.07 kB │ gzip:  0.64 kB
+  /assets/root-B41NV51g.js                2.46 kB │ gzip:  1.01 kB
+  /assets/home-DTiNyCnA.js                2.70 kB │ gzip:  1.18 kB
+  /assets/async-yuustate-D5PCOWrn.js      7.22 kB │ gzip:  2.00 kB 🎉
+  /assets/react-l3jiHRhi.js              11.93 kB │ gzip:  4.07 kB
+  /assets/async-tanstack-DATZCeg8.js     44.06 kB │ gzip: 12.64 kB
   /assets/chunk-UVKPFVEO-BCVTWmlK.js    126.29 kB │ gzip: 42.59 kB
   /assets/entry.client-CMKBzKJ-.js      190.57 kB │ gzip: 60.05 kB
 ✓ built in 715ms
