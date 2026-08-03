@@ -15,22 +15,29 @@ export const basicQueryFn2 = async () => {
   };
 };
 
+let query1ShouldError = false;
 export const keyedQueryFn1 = async ({ id }: { id: number }) => {
   console.info("[tanstack]", "keyedQueryFn called", `id: ${id}`);
   await new Promise((r) => setTimeout(r, 2000));
-  if (id === 3) {
-    throw new Error("Boom!");
+  if (id === 3) throw new Error("Boom!");
+  if (id === 5) {
+    query1ShouldError = !query1ShouldError;
+    if (query1ShouldError) throw new Error("Boom!");
   }
   return {
     a: Math.random(),
     b: { id, value: "always-same" },
   };
 };
+
+let query2ShouldError = false;
 export const keyedQueryFn2 = async ({ id }: { id: number }) => {
   console.info("[yuustate]", "keyedQueryFn called", `id: ${id}`);
   await new Promise((r) => setTimeout(r, 2000));
-  if (id === 3) {
-    throw new Error("Boom!");
+  if (id === 3) throw new Error("Boom!");
+  if (id === 5) {
+    query2ShouldError = !query2ShouldError;
+    if (query2ShouldError) throw new Error("Boom!");
   }
   return {
     a: Math.random(),

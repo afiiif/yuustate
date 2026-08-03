@@ -137,7 +137,8 @@ function KeyedQueryContainer() {
         </button>
         <div>id: {id}</div>
         <button onClick={() => setId((p) => p + 1)}>{">"}</button>
-        {id === 3 && <div className="text-rose-400 text-xs">Will simulate error</div>}
+        {id === 3 && <div className="text-rose-400 text-xs">Simulate error</div>}
+        {id === 5 && <div className="text-orange-400 text-xs">Simulate retry</div>}
       </div>
       <KeyedQueryState id={id} />
       <KeyedQueryDataSlice id={id} />
