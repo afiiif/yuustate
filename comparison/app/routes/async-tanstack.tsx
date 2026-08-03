@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 
 import { CardWithReRenderHighlight, Tabs } from "~/shared/components";
-import { basicQueryFn1, infQueryFn1, keyedQueryFn1, mutationFn1 } from "~/shared/utils";
+import { basicQueryFn1, infQueryFn1, parameterizedQueryFn1, mutationFn1 } from "~/shared/utils";
 
 export function meta() {
   return [
@@ -37,8 +37,8 @@ export default function AsyncStateTanstack() {
             content: <MyQuery />,
           },
           {
-            label: "Keyed Query",
-            content: <KeyedQueryContainer />,
+            label: "Parameterized Query",
+            content: <ParameterizedQueryContainer />,
           },
           {
             label: "Infinite Query",
@@ -118,16 +118,19 @@ function MyQueryActions() {
 
 // ---
 
-type KeyedQueryResponse = Awaited<ReturnType<typeof keyedQueryFn1>>;
-const useKeyedQuery = (id: number, options?: Partial<UseQueryOptions<KeyedQueryResponse>>) =>
-  useQuery<KeyedQueryResponse>({
+type ParameterizedQueryResponse = Awaited<ReturnType<typeof parameterizedQueryFn1>>;
+const useParameterizedQuery = (
+  id: number,
+  options?: Partial<UseQueryOptions<ParameterizedQueryResponse>>,
+) =>
+  useQuery<ParameterizedQueryResponse>({
     ...options,
-    queryKey: ["keyed", id],
-    queryFn: () => keyedQueryFn1({ id }),
+    queryKey: ["parameterized", id],
+    queryFn: () => parameterizedQueryFn1({ id }),
     staleTime: 15_000,
   });
 
-function KeyedQueryContainer() {
+function ParameterizedQueryContainer() {
   const [id, setId] = useState(1);
   return (
     <CardWithReRenderHighlight>
@@ -140,14 +143,14 @@ function KeyedQueryContainer() {
         {id === 3 && <div className="text-rose-400 text-xs">Simulate error</div>}
         {id === 5 && <div className="text-orange-400 text-xs">Simulate retry</div>}
       </div>
-      <KeyedQueryState id={id} />
-      <KeyedQueryDataSlice id={id} />
-      <KeyedQueryActions id={id} />
+      <ParameterizedQueryState id={id} />
+      <ParameterizedQueryDataSlice id={id} />
+      <ParameterizedQueryActions id={id} />
     </CardWithReRenderHighlight>
   );
 }
-function KeyedQueryState({ id }: { id: number }) {
-  const queryState = useKeyedQuery(id);
+function ParameterizedQueryState({ id }: { id: number }) {
+  const queryState = useParameterizedQuery(id);
   return (
     <CardWithReRenderHighlight>
       <h3>{"queryState"}</h3>
@@ -155,8 +158,8 @@ function KeyedQueryState({ id }: { id: number }) {
     </CardWithReRenderHighlight>
   );
 }
-function KeyedQueryDataSlice({ id }: { id: number }) {
-  const queryState = useKeyedQuery(id, { placeholderData: keepPreviousData });
+function ParameterizedQueryDataSlice({ id }: { id: number }) {
+  const queryState = useParameterizedQuery(id, { placeholderData: keepPreviousData });
   const errMsg = queryState.error?.message;
   return (
     <CardWithReRenderHighlight>
@@ -171,13 +174,13 @@ function KeyedQueryDataSlice({ id }: { id: number }) {
     </CardWithReRenderHighlight>
   );
 }
-function KeyedQueryActions({ id }: { id: number }) {
+function ParameterizedQueryActions({ id }: { id: number }) {
   return (
     <CardWithReRenderHighlight className="flex gap-3 !mb-0">
-      <button onClick={() => queryClient.invalidateQueries({ queryKey: ["keyed", id] })}>
+      <button onClick={() => queryClient.invalidateQueries({ queryKey: ["parameterized", id] })}>
         Invalidate
       </button>
-      <button onClick={() => queryClient.invalidateQueries({ queryKey: ["keyed"] })}>
+      <button onClick={() => queryClient.invalidateQueries({ queryKey: ["parameterized"] })}>
         Invalidate all ids
       </button>
     </CardWithReRenderHighlight>

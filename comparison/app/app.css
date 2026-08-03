@@ -75,7 +75,7 @@ button {
 }
 
 .tabs {
-  @apply -mx-4 px-4 sm:-mx-6 sm:px-6 pt-3 border-b mb-8 text-xs;
+  @apply -mx-4 px-4 sm:-mx-6 sm:px-6 pt-3 border-b mb-8 text-[11px] sm:text-xs;
   @apply flex gap-1;
   @apply sticky top-0 bg-[#21252b] z-40;
   > button {

@@ -16,8 +16,8 @@ export const basicQueryFn2 = async () => {
 };
 
 let query1ShouldError = false;
-export const keyedQueryFn1 = async ({ id }: { id: number }) => {
-  console.info("[tanstack]", "keyedQueryFn called", `id: ${id}`);
+export const parameterizedQueryFn1 = async ({ id }: { id: number }) => {
+  console.info("[tanstack]", "parameterizedQueryFn called", `id: ${id}`);
   await new Promise((r) => setTimeout(r, 2000));
   if (id === 3) throw new Error("Boom!");
   if (id === 5) {
@@ -31,8 +31,8 @@ export const keyedQueryFn1 = async ({ id }: { id: number }) => {
 };
 
 let query2ShouldError = false;
-export const keyedQueryFn2 = async ({ id }: { id: number }) => {
-  console.info("[yuustate]", "keyedQueryFn called", `id: ${id}`);
+export const parameterizedQueryFn2 = async ({ id }: { id: number }) => {
+  console.info("[yuustate]", "parameterizedQueryFn called", `id: ${id}`);
   await new Promise((r) => setTimeout(r, 2000));
   if (id === 3) throw new Error("Boom!");
   if (id === 5) {
