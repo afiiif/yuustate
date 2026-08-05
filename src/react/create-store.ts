@@ -38,7 +38,7 @@ export const createStore = <TState extends Record<string, any>>(
     /**
      * Initial state used on first render (and will also update the store state right after that)
      */
-    initialState?: Partial<TState>;
+    initialState?: Partial<TState> | undefined;
   }) => useStoreState(store, options);
   return Object.assign(useStore, store);
 };

@@ -10,7 +10,6 @@ import {
 } from "../vanilla.ts";
 import type { StoreKey } from "./create-stores.ts";
 import {
-  NO_INITIAL_VALUE,
   compressPaths,
   getValueByPath,
   useStoreStateProxy,
@@ -747,7 +746,7 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
           initialDataIsStale?: boolean;
         }
       | {
-          initialData?: never;
+          initialData?: never | undefined;
           initialDataIsStale?: never;
         }
     );
@@ -777,7 +776,7 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
      */
     const useStore = (options: UseQueryStoreOptions = {}): TState => {
       const {
-        initialData = NO_INITIAL_VALUE as TData,
+        initialData,
         initialDataIsStale = false,
         revalidateOnMount = true,
         keepPreviousData,
@@ -785,7 +784,7 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
 
       const [storeState, initialDataInitiatedAt] = useStoreStateWithInitializer(
         store,
-        initialData === NO_INITIAL_VALUE
+        initialData === undefined
           ? undefined
           : {
               state: "SUCCESS",

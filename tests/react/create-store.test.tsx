@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, renderHook, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { createStore } from "yuustate/react";
 
@@ -184,5 +184,14 @@ describe("createStore", () => {
     // Should NOT override existing store state
     expect(useStore.getState().count).toBe(5);
     expect(screen.getByText("count: 5")).toBeInTheDocument();
+  });
+
+  it("does not apply when initialState is undefined", () => {
+    const useStore = createStore({ count: 0 });
+
+    const { result } = renderHook(() => useStore({ initialState: undefined }));
+
+    expect(result.current.count).toBe(0);
+    expect(useStore.getState().count).toBe(0);
   });
 });

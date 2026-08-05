@@ -58,15 +58,13 @@ export const useStoreStateProxy = <TState extends Record<string, any>>(storeStat
   return [trackedState, usedPathsRef] as const;
 };
 
-export const NO_INITIAL_VALUE = {};
-
 export const useStoreStateWithInitializer = <TState extends Record<string, any>>(
   store: StoreApi<TState>,
-  initialState = NO_INITIAL_VALUE as Partial<TState>,
+  initialState?: Partial<TState>,
 ) => {
   const initiatedAt = useRef(new WeakMap([[store, 0]]));
   useEffect(() => {
-    if (initialState === NO_INITIAL_VALUE || initiatedAt.current.get(store)) return;
+    if (initialState === undefined || initiatedAt.current.get(store)) return;
     store.setState(initialState);
     initiatedAt.current.set(store, Date.now());
   }, [store, initialState]);
@@ -74,7 +72,7 @@ export const useStoreStateWithInitializer = <TState extends Record<string, any>>
   const storeState = store.getState();
 
   const finalState =
-    initialState === NO_INITIAL_VALUE || initiatedAt.current.get(store)
+    initialState === undefined || initiatedAt.current.get(store)
       ? storeState
       : { ...storeState, ...initialState };
 
@@ -105,7 +103,7 @@ export const useStoreStateWithInitializer = <TState extends Record<string, any>>
  */
 export const useStoreState = <TState extends Record<string, any>>(
   store: StoreApi<TState>,
-  options: { initialState?: Partial<TState> } = {},
+  options: { initialState?: Partial<TState> | undefined } = {},
 ): TState => {
   const [state] = useStoreStateWithInitializer(store, options.initialState);
 

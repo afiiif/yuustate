@@ -1145,13 +1145,16 @@ describe("createQuery", () => {
     const queryFn = vi.fn(async () => ({ x: 1 }));
     const query = createQuery(queryFn);
 
-    const { result } = renderHook(() => {
+    let numOfRender = 0;
+    const { result, rerender } = renderHook((x: number = 3) => {
       const useQuery = query();
+      numOfRender++;
       return useQuery({
-        initialData: { x: 3 },
+        initialData: { x },
       });
     });
 
+    expect(numOfRender).toBe(1);
     expect(result.current).toMatchObject({
       state: "SUCCESS",
       isSuccess: true,
@@ -1168,6 +1171,44 @@ describe("createQuery", () => {
       data: { x: 3 },
       dataUpdatedAt: undefined,
       isError: false,
+      error: undefined,
+    });
+
+    rerender(4);
+    expect(numOfRender).toBe(2);
+    expect(query().getState()).toMatchObject({
+      state: "SUCCESS",
+      isSuccess: true,
+      data: { x: 3 },
+      dataUpdatedAt: undefined,
+      isError: false,
+      error: undefined,
+    });
+  });
+
+  it("distinguishes initialData undefined from null", () => {
+    const queryFn = vi.fn(async () => "result");
+    const query = createQuery<string | null>(queryFn);
+
+    const { result: resultUndefined } = renderHook(() => {
+      const useQuery = query();
+      return useQuery({ initialData: undefined, revalidateOnMount: false });
+    });
+    expect(resultUndefined.current).toMatchObject({
+      state: "INITIAL",
+      isSuccess: false,
+      data: undefined,
+      error: undefined,
+    });
+
+    const { result: resultNull } = renderHook(() => {
+      const useQuery = query();
+      return useQuery({ initialData: null, revalidateOnMount: false });
+    });
+    expect(resultNull.current).toMatchObject({
+      state: "SUCCESS",
+      isSuccess: true,
+      data: null,
       error: undefined,
     });
   });
