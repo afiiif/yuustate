@@ -54,8 +54,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       yuustate:
-        specifier: ^3.10.0
-        version: 3.10.0(@types/react@18.2.21)(react@18.2.0)
+        specifier: ^3.10.1
+        version: 3.10.1(@types/react@18.2.21)(react@18.2.0)
     devDependencies:
       '@commitlint/cli':
         specifier: ^17.7.1
@@ -3665,8 +3665,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  yuustate@3.10.0:
-    resolution: {integrity: sha512-Xubs4na2PNtN5ot84ZLEQJJovL7XRx+QNw8dItTdD8iIsan7n5Z0Aq/oWjBrvB1SnTHWUEjs59PAMOrli69DoA==}
+  yuustate@3.10.1:
+    resolution: {integrity: sha512-eqqZgQOVjat1AE+SouWDwPAfmDSeY9L3ATCNsfFU4GeO8OAfYJ6rr76Xi5IFW/MLVQB9rBFr5sj79hSaQp5r0A==}
     peerDependencies:
       '@types/react': '>=18.0'
       react: '>=18.0'
@@ -3763,7 +3763,7 @@ snapshots:
       '@types/node': 20.5.1
       chalk: 4.1.2
       cosmiconfig: 8.3.6(typescript@5.2.2)
-      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.2.2))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.2.2))(typescript@5.2.2)
+      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.2.2))(ts-node@10.9.2(@types/node@20.5.7)(typescript@5.2.2))(typescript@5.2.2)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -4646,7 +4646,7 @@ snapshots:
     dependencies:
       layout-base: 1.0.2
 
-  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.2.2))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.2.2))(typescript@5.2.2):
+  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.2.2))(ts-node@10.9.2(@types/node@20.5.7)(typescript@5.2.2))(typescript@5.2.2):
     dependencies:
       '@types/node': 20.5.1
       cosmiconfig: 8.3.6(typescript@5.2.2)
@@ -8005,7 +8005,7 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  yuustate@3.10.0(@types/react@18.2.21)(react@18.2.0):
+  yuustate@3.10.1(@types/react@18.2.21)(react@18.2.0):
     optionalDependencies:
       '@types/react': 18.2.21
       react: 18.2.0
