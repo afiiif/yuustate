@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useRef, useSyncExternalStore } from "react";
 import { type StoreApi } from "../vanilla.ts";
+import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect.ts";
 
 type Path = Array<string | number | symbol>;
 
@@ -63,7 +64,7 @@ export const useStoreStateWithInitializer = <TState extends Record<string, any>>
   initialState?: Partial<TState>,
 ) => {
   const initiatedAt = useRef(new WeakMap([[store, 0]]));
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (initialState === undefined || initiatedAt.current.get(store)) return;
     store.setState(initialState);
     initiatedAt.current.set(store, Date.now());
@@ -109,8 +110,21 @@ export const useStoreState = <TState extends Record<string, any>>(
 
   const [trackedState, usedPathsRef] = useStoreStateProxy(state);
 
-  const snapshotRef = useRef(store.getState());
-  const getSnapshot = () => snapshotRef.current;
+  const snapshotRef = useRef(state);
+  const getSnapshot = () => {
+    const prevState = snapshotRef.current;
+    const nextState = store.getState();
+    const paths = compressPaths(usedPathsRef.current);
+    for (const path of paths) {
+      const prevVal = getValueByPath(prevState, path);
+      const nextVal = getValueByPath(nextState, path);
+      if (!Object.is(prevVal, nextVal)) {
+        snapshotRef.current = nextState;
+        break;
+      }
+    }
+    return snapshotRef.current;
+  };
 
   useSyncExternalStore(
     useCallback(

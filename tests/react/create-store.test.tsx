@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "react";
 import { act, render, renderHook, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { createStore } from "yuustate/react";
@@ -193,5 +194,62 @@ describe("createStore", () => {
 
     expect(result.current.count).toBe(0);
     expect(useStore.getState().count).toBe(0);
+  });
+
+  it("should not show stale state when the store changes in a parent layout effect", () => {
+    const useStore = createStore({
+      foo: 1,
+      bar: 2,
+    });
+
+    let fullRender = 0;
+    let fooRender = 0;
+    let barRender = 0;
+
+    function Full() {
+      const state = useStore();
+      fullRender++;
+      return (
+        <div>
+          full: {state.foo}-{state.bar}
+        </div>
+      );
+    }
+
+    function Foo() {
+      const state = useStore();
+      fooRender++;
+      return <div>foo: {state.foo}</div>;
+    }
+
+    function Bar() {
+      const { bar } = useStore();
+      barRender++;
+      return <div>bar: {bar}</div>;
+    }
+
+    function Parent() {
+      useLayoutEffect(() => {
+        useStore.setState({ foo: 99 });
+      }, []);
+
+      return (
+        <>
+          <Full />
+          <Foo />
+          <Bar />
+        </>
+      );
+    }
+
+    render(<Parent />);
+
+    expect(screen.getByText("full: 99-2")).toBeInTheDocument();
+    expect(screen.getByText("foo: 99")).toBeInTheDocument();
+    expect(screen.getByText("bar: 2")).toBeInTheDocument();
+
+    expect(fullRender).toBe(2);
+    expect(fooRender).toBe(2);
+    expect(barRender).toBe(1);
   });
 });
