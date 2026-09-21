@@ -14,7 +14,7 @@ describe("createStores", () => {
     expect(storeA.setState).toBe(storeB.setState);
     expect(storeA.getSubscriberCount).toBe(storeB.getSubscriberCount);
 
-    expect(storeA.key).toBe(storeB.key);
+    expect(storeA.key).toEqual(storeB.key);
   });
 
   it("isolates state between stores", () => {

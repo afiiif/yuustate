@@ -82,6 +82,7 @@ export const createStores = <TState extends Record<string, any>, TKey extends St
 
     if (stores.has(keyHash)) {
       store = stores.get(keyHash)!;
+      store.key = key;
     } else {
       store = initStore(
         initialState,
