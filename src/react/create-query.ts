@@ -115,7 +115,12 @@ type Internal<TData, TError> = {
   rollbackData?: TData | undefined;
 };
 
-type AdditionalStoreApi<TData, TError> = {
+type AdditionalStoreApi<TData, TError, TVariable extends StoreKey = never> = {
+  /**
+   * The original query variable used to create this store.
+   */
+  variable: TVariable;
+
   /**
    * A deterministic hash string derived from the query variable.
    *
@@ -258,7 +263,7 @@ type AdditionalStoreApi<TData, TError> = {
  */
 export type QueryOptions<TData, TVariable extends StoreKey, TError = Error> = InitStoreOptions<
   QueryState<TData, TError>,
-  AdditionalStoreApi<TData, TError>
+  AdditionalStoreApi<TData, TError, TVariable>
 > & {
   /**
    * Time (in milliseconds) that data is considered fresh.
@@ -396,7 +401,7 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
   type TState = QueryState<TData, TError>;
   const initialState: TState = { ...INITIAL_STATE };
 
-  type TAdditionalStoreApi = AdditionalStoreApi<TData, TError>;
+  type TAdditionalStoreApi = AdditionalStoreApi<TData, TError, TVariable>;
   type TStore = StoreApi<TState> & TAdditionalStoreApi;
   const stores = new Map<string, TStore>();
 
@@ -471,7 +476,7 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
   const getApis = (
     store: TStore,
     variable: TVariable,
-  ): Omit<TAdditionalStoreApi, "variableHash"> => ({
+  ): Omit<TAdditionalStoreApi, "variableHash" | "variable"> => ({
     internal: {},
     setInitialData: (data, revalidate = false) => {
       const state = store.getState();
@@ -673,11 +678,13 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
 
     if (stores.has(variableHash)) {
       store = stores.get(variableHash)!;
+      store.variable = variable;
     } else {
       store = initStore(
         initialState,
         configureStoreEvents(variableHash) as any, // Intentionally using as any: don't want to add generic on `initStore`
       ) as TStore;
+      store.variable = variable;
       store.variableHash = variableHash;
       stores.set(variableHash, store);
 
@@ -883,6 +890,9 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
     });
   };
 
+  const shouldApplyToStore = (store: TStore, filter?: (variable: TVariable) => boolean) =>
+    filter ? filter(store.variable) : true;
+
   return Object.assign(getStore, {
     /**
      * Executes all query instances.
@@ -890,8 +900,26 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
      * @remarks
      * - Useful for bulk refetching.
      */
-    executeAll: (options?: { overwriteOngoingExecution?: boolean }) => {
-      stores.forEach((store) => store.execute(options));
+    executeAll: (
+      options: {
+        /**
+         * Optional predicate to select which query to execute.
+         */
+        filter?: (variable: TVariable) => boolean;
+
+        /**
+         * Whether to start a new execution instead of reusing an ongoing one.
+         *
+         * @default true
+         */
+        overwriteOngoingExecution?: boolean;
+      } = {},
+    ) => {
+      const { filter, ...restOptions } = options;
+      stores.forEach((store) => {
+        if (!shouldApplyToStore(store, filter)) return;
+        store.execute(restOptions);
+      });
     },
 
     /**
@@ -900,8 +928,26 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
      * @remarks
      * - Only re-fetches stale queries.
      */
-    revalidateAll: (options?: { overwriteOngoingExecution?: boolean }) => {
-      stores.forEach((store) => store.revalidate(options));
+    revalidateAll: (
+      options: {
+        /**
+         * Optional predicate to select which query to revalidate.
+         */
+        filter?: (variable: TVariable) => boolean;
+
+        /**
+         * Whether to start a new execution instead of reusing an ongoing one.
+         *
+         * @default true
+         */
+        overwriteOngoingExecution?: boolean;
+      } = {},
+    ) => {
+      const { filter, ...restOptions } = options;
+      stores.forEach((store) => {
+        if (!shouldApplyToStore(store, filter)) return;
+        store.revalidate(restOptions);
+      });
     },
 
     /**
@@ -911,15 +957,44 @@ export const createQuery = <TData, TVariable extends StoreKey = never, TError = 
      * - Marks all queries as invalidated and triggers revalidation if active.
      * - Invalidated queries bypass `staleTime` until successfully executed again.
      */
-    invalidateAll: (options?: { overwriteOngoingExecution?: boolean }) => {
-      stores.forEach((store) => store.invalidate(options));
+    invalidateAll: (
+      options: {
+        /**
+         * Optional predicate to select which query to invalidate.
+         */
+        filter?: (variable: TVariable) => boolean;
+
+        /**
+         * Whether to start a new execution instead of reusing an ongoing one.
+         *
+         * @default true
+         */
+        overwriteOngoingExecution?: boolean;
+      } = {},
+    ) => {
+      const { filter, ...restOptions } = options;
+      stores.forEach((store) => {
+        if (!shouldApplyToStore(store, filter)) return;
+        store.invalidate(restOptions);
+      });
     },
 
     /**
      * Resets all query instances.
      */
-    resetAll: () => {
-      stores.forEach((store) => store.reset());
+    resetAll: (
+      options: {
+        /**
+         * Optional predicate to select which query to reset.
+         */
+        filter?: (variable: TVariable) => boolean;
+      } = {},
+    ) => {
+      const { filter } = options;
+      stores.forEach((store) => {
+        if (!shouldApplyToStore(store, filter)) return;
+        store.reset();
+      });
     },
   });
 };

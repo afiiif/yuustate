@@ -908,6 +908,61 @@ describe("createQuery", () => {
     });
   });
 
+  it("filters executeAll, revalidateAll, and invalidateAll by variable", async () => {
+    vi.useFakeTimers();
+
+    const queryFn = vi.fn(async ({ id }: { id: number }) => `ok${id}`);
+    const query = createQuery<string, { id: number }>(queryFn);
+
+    const s1 = query({ id: 1 });
+    const s2 = query({ id: 2 });
+    const s3 = query({ id: 3 });
+
+    expect(s1.variable).toEqual({ id: 1 });
+    expect(s2.variable).toEqual({ id: 2 });
+    expect(s3.variable).toEqual({ id: 3 });
+
+    await Promise.all([s1.execute(), s2.execute(), s3.execute()]);
+    expect(queryFn).toHaveBeenCalledTimes(3);
+
+    query.executeAll({ filter: (variable) => variable.id !== 2 });
+    expect(queryFn).toHaveBeenCalledTimes(3 + 2);
+
+    vi.advanceTimersByTime(2500);
+    query.revalidateAll({ filter: (variable) => variable.id === 2 });
+    expect(queryFn).toHaveBeenCalledTimes(3 + 2 + 1);
+
+    const unsub1 = s1.subscribe(() => {});
+    const unsub2 = s2.subscribe(() => {});
+    const unsub3 = s3.subscribe(() => {});
+
+    query.invalidateAll({ filter: (variable) => variable.id !== 3 });
+    expect(queryFn).toHaveBeenCalledTimes(3 + 2 + 1 + 2);
+
+    unsub1();
+    unsub2();
+    unsub3();
+    vi.useRealTimers();
+  });
+
+  it("resets filtered stores to initial state", async () => {
+    const queryFn = vi.fn(async ({ id }: { id: number }) => `ok${id}`);
+    const query = createQuery<string, { id: number }>(queryFn);
+
+    const s1 = query({ id: 1 });
+    const s2 = query({ id: 2 });
+    const s3 = query({ id: 3 });
+
+    await Promise.all([s1.execute(), s2.execute(), s3.execute()]);
+
+    query.resetAll({ filter: (variable) => variable.id !== 2 });
+
+    expect(s1.getState().state).toBe("INITIAL");
+    expect(s2.getState().state).toBe("SUCCESS");
+    expect(s2.getState().data).toBe("ok2");
+    expect(s3.getState().state).toBe("INITIAL");
+  });
+
   it("manual setState is overridden by execute", async () => {
     const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
 
