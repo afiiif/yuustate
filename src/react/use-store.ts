@@ -2,13 +2,13 @@ import { useCallback, useMemo, useRef, useSyncExternalStore } from "react";
 import { type StoreApi } from "../vanilla.ts";
 import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect.ts";
 
-const DATE_METHOD_REGEX = /^(?:to|get)[A-Z]/;
+const DATE_METHOD_REGEX = /^((to|get)[A-Z]|valueOf)/;
 
 type Path = Array<string | number | symbol>;
 
 export const getValueByPath = (obj: any, path: Path) => {
   return path.reduce((acc, key) => {
-    if (acc instanceof Date && DATE_METHOD_REGEX.test(key as string)) {
+    if (acc instanceof Date && typeof key === "string" && DATE_METHOD_REGEX.test(key)) {
       return (acc[key as keyof Date] as () => any)();
     }
     return acc?.[key];
@@ -58,7 +58,8 @@ export const useStoreStateProxy = <TState extends Record<string, any>>(storeStat
           if (
             target instanceof Date &&
             typeof value === "function" &&
-            DATE_METHOD_REGEX.test(key as string)
+            typeof key === "string" &&
+            DATE_METHOD_REGEX.test(key)
           ) {
             return value.bind(target);
           }
