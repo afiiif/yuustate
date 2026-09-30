@@ -252,4 +252,43 @@ describe("createStore", () => {
     expect(fooRender).toBe(2);
     expect(barRender).toBe(1);
   });
+
+  it("handles Date values correctly", () => {
+    const initialDate = new Date("2026-09-30T00:00:00.000Z");
+    const useStore = createStore({ date: initialDate });
+
+    let renders = 0;
+
+    function MyComponent() {
+      const { date } = useStore();
+      renders++;
+
+      return <div>{date.toISOString()}</div>;
+    }
+
+    render(<MyComponent />);
+
+    expect(renders).toBe(1);
+    expect(screen.getByText("2026-09-30T00:00:00.000Z")).toBeInTheDocument();
+
+    // Same Date value, but a different Date object
+    act(() => {
+      useStore.setState({
+        date: new Date(initialDate),
+      });
+    });
+
+    expect(renders).toBe(1);
+    expect(screen.getByText("2026-09-30T00:00:00.000Z")).toBeInTheDocument();
+
+    // Actually different Date value
+    act(() => {
+      useStore.setState({
+        date: new Date("2026-10-01T00:00:00.000Z"),
+      });
+    });
+
+    expect(renders).toBe(2);
+    expect(screen.getByText("2026-10-01T00:00:00.000Z")).toBeInTheDocument();
+  });
 });
