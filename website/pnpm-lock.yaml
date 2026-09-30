@@ -54,8 +54,8 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       yuustate:
-        specifier: ^3.11.1
-        version: 3.11.1(@types/react@18.2.21)(react@18.2.0)
+        specifier: ^3.11.2
+        version: 3.11.2(@types/react@18.2.21)(react@18.2.0)
     devDependencies:
       '@commitlint/cli':
         specifier: ^17.7.1
@@ -3665,8 +3665,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  yuustate@3.11.1:
-    resolution: {integrity: sha512-DCcoIAXhA6iG8rMvq6s+VbjkJAHfc4pvERLu4ZsC+MPugTzhdZUpUnHCC2PuncgxOLTKsVBQvhFfG0QrAMblrw==}
+  yuustate@3.11.2:
+    resolution: {integrity: sha512-oF3VKQZTzADjW/bm6pn3gFMfy0j1of/YY4fBwykdUPvdlOioHKxG/5koy/wDQAaErlY5sYTdlRBOAKy2DmFaJg==}
     peerDependencies:
       '@types/react': '>=18.0'
       react: '>=18.0'
@@ -8005,7 +8005,7 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  yuustate@3.11.1(@types/react@18.2.21)(react@18.2.0):
+  yuustate@3.11.2(@types/react@18.2.21)(react@18.2.0):
     optionalDependencies:
       '@types/react': 18.2.21
       react: 18.2.0
