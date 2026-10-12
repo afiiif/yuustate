@@ -12,6 +12,13 @@ describe("createStore", () => {
     expect(typeof store.subscribe).toBe("function");
   });
 
+  it("does not proxy React elements in store state", () => {
+    const element = <span>content</span>;
+    const useStore = createStore({ element });
+    const { result } = renderHook(() => useStore());
+    expect(result.current.element).toBe(element);
+  });
+
   it("re-renders correctly based on store state usage", () => {
     const useStore = createStore({
       foo: 2,

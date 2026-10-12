@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useSyncExternalStore } from "react";
+import { isValidElement, useCallback, useMemo, useRef, useSyncExternalStore } from "react";
 import { type StoreApi } from "../vanilla.ts";
 import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect.ts";
 
@@ -44,7 +44,7 @@ export const useStoreStateProxy = <TState extends Record<string, any>>(storeStat
     const proxyCache = new WeakMap();
 
     const createDeepProxy = <T>(target: T, path: Path = []): T => {
-      if (typeof target !== "object" || target === null) {
+      if (typeof target !== "object" || target === null || isValidElement(target)) {
         return target;
       }
       if (proxyCache.has(target)) {
